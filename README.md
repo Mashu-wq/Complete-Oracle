@@ -260,6 +260,62 @@ Primary Key and Foreign Key relationships are fundamental concepts in relational
 - Table Relationships:
    - One-to-Many Relationship: A single row in one table (e.g., departments) can relate to multiple rows in another table (e.g., employees). For example, one department can have many employees.
 
+## Modifying Data Using UPDATE
+```
+UPDATE table_name
+SET column1 = value1, column2 = value2, ...
+WHERE condition;
+```
+```
+UPDATE employees
+SET salary = 75000
+WHERE employee_id = 6;
+```
+
+## Deleting Data Using DELETE
+```
+DELETE FROM table_name
+WHERE condition;
+```
+```
+DELETE FROM employees
+WHERE employee_id = 6;
+```
+## Basic Subqueries in SQL
+### 1. Introduction to Subqueries (Nested Queries)
+A subquery (also known as a nested query) is a query within another SQL query. The subquery is executed first, and its result is then used by the main query. Subqueries are typically enclosed in parentheses.
+
+Subqueries can be used in various places within a SQL statement, such as in the SELECT list, FROM clause, or WHERE clause.
+```
+SELECT column1, column2
+FROM table1
+WHERE column3 = (SELECT column FROM table2 WHERE condition);
+```
+##### If you want to find all employees who work in the "Sales" department, you can use a subquery:
+```
+SELECT first_name, last_name
+FROM employees
+WHERE department_id = (SELECT department_id FROM departments WHERE department_name = 'Sales');
+```
+- Explanation: The subquery (SELECT department_id FROM departments WHERE department_name = 'Sales') retrieves the department_id for the Sales department. The main query then selects employees who work in that department.
+
+### 2. Using Subqueries to Filter Data
+Subqueries are particularly useful when you need to filter data based on more complex criteria that involve multiple tables or aggregated results.
+#### Example 1: Find employees whose salary is above the average salary in their department.
+```
+SELECT first_name, last_name, salary
+FROM employees e
+WHERE salary > (SELECT AVG(salary) FROM employees WHERE department_id = e.department_id);
+```
+- Explanation: The subquery (SELECT AVG(salary) FROM employees WHERE department_id = e.department_id) calculates the average salary for each department. The main query then selects employees whose salary is higher than this average.
+#### Example 2: List departments that have more than one employee.
+```
+SELECT department_name
+FROM departments
+WHERE department_id IN (SELECT department_id FROM employees GROUP BY department_id HAVING COUNT(*) > 1);
+```
+- Explanation: The subquery (SELECT department_id FROM employees GROUP BY department_id HAVING COUNT(*) > 1) finds departments that have more than one employee. The main query retrieves the names of these departments.
+
 
 
 

@@ -126,9 +126,11 @@ SELECT column1, column2, column3
 FROM table_name;
 ```
 ```
+//retrieving all the data
+SELECT * FROM employees;
+
 SELECT first_name, last_name, email
 FROM employees;
-
 ```
 This query retrieves the first_name, last_name, and email columns from the employees table.
 

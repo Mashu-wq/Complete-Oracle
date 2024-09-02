@@ -22,8 +22,8 @@
 - Advanced Security and Auditing
 - Practical Projects
 
-
-
+## SELECT Statements: Retrieving Data from a Single Table
+The SELECT statement is used to retrieve data from one or more tables. Here’s an example:
 ```
 SELECT column1, column2, column3
 FROM table_name;

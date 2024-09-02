@@ -177,8 +177,88 @@ FROM table_name;
 SELECT DISTINCT department
 FROM employees;
 ```
+## Simple Joins in SQL
+### 1. Understanding and Using INNER JOIN
+INNER JOIN is a type of join in SQL that returns rows from two or more tables where the joined columns have matching values. If there are no matches between the tables, those rows are not included in the result.
+```
+SELECT columns
+FROM table1
+INNER JOIN table2
+ON table1.column = table2.column;
+```
+Suppose you have two tables: employees and departments.
 
+## Employees Table
 
+| Column Name   | Data Type      | Description                     |
+|---------------|----------------|---------------------------------|
+| employee_id   | NUMBER         | Primary key, unique identifier  |
+| first_name    | VARCHAR2(50)   | First name of the employee      |
+| last_name     | VARCHAR2(50)   | Last name of the employee       |
+| department_id | NUMBER         | Foreign key to the departments table |
+| salary        | NUMBER         | Employee's salary               |
+
+## Departments Table
+
+| Column Name      | Data Type      | Description                     |
+|------------------|----------------|---------------------------------|
+| department_id    | NUMBER         | Primary key, unique identifier  |
+| department_name  | VARCHAR2(50)   | Name of the department          |
+
+```
+CREATE TABLE departments (
+    department_id NUMBER PRIMARY KEY,
+    department_name VARCHAR2(50) NOT NULL
+);
+CREATE TABLE employees (
+    employee_id NUMBER PRIMARY KEY,
+    first_name VARCHAR2(50),
+    last_name VARCHAR2(50),
+    department_id NUMBER,
+    salary NUMBER,
+    CONSTRAINT fk_department
+        FOREIGN KEY (department_id)
+        REFERENCES departments(department_id)
+);
+
+INSERT INTO departments (department_id, department_name) 
+VALUES (101, 'Sales');
+INSERT INTO departments (department_id, department_name) 
+VALUES (102, 'HR');
+INSERT INTO departments (department_id, department_name) 
+VALUES (103, 'IT');
+INSERT INTO employees (employee_id, first_name, last_name, department_id, salary) 
+VALUES (1, 'John', 'Doe', 101, 60000);
+
+INSERT INTO employees (employee_id, first_name, last_name, department_id, salary) 
+VALUES (2, 'Jane', 'Smith', 102, 50000);
+INSERT INTO employees (employee_id, first_name, last_name, department_id, salary) 
+VALUES (3, 'Mike', 'Johnson', 101, 75000);
+INSERT INTO employees (employee_id, first_name, last_name, department_id, salary) 
+VALUES (4, 'Emily', 'Davis', 103, 62000);
+INSERT INTO employees (employee_id, first_name, last_name, department_id, salary) 
+VALUES (5, 'Michael', 'Brown', 103, 68000);
+
+//To retrieve the employee names along with their department names, you can use an INNER JOIN:
+
+SELECT employees.first_name, employees.last_name, departments.department_name
+FROM employees
+INNER JOIN departments
+ON employees.department_id = departments.department_id;
+```
+### 2. Basic Understanding of Table Relationships
+Primary Key and Foreign Key relationships are fundamental concepts in relational databases. They establish connections between tables.
+
+- Primary Key:
+   - A column or set of columns in a table that uniquely identifies each row.
+   - No two rows can have the same primary key value.
+  Example: In the departments table, department_id is the primary key because it uniquely identifies each department.
+- Foreign Key:
+   - A column in one table that refers to the primary key in another table.
+   - It establishes a link between the two tables, creating a relationship.
+ Example: In the employees table, department_id is a foreign key that references the department_id in the departments table, creating a relationship between employees and departments.
+- Table Relationships:
+   - One-to-Many Relationship: A single row in one table (e.g., departments) can relate to multiple rows in another table (e.g., employees). For example, one department can have many employees.
 
 
 

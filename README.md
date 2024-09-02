@@ -360,7 +360,7 @@ GROUP BY department_id;
 ```
 This query groups employees by department_id and calculates the total salary for each department.
 
-### Filtering Grouped Data Using HAVING
+### 3.Filtering Grouped Data Using HAVING
 The HAVING clause is used to filter groups based on a specified condition. It is similar to the WHERE clause but is applied after the data has been grouped.
 ```
 SELECT column1, aggregate_function(column2)

@@ -316,6 +316,68 @@ WHERE department_id IN (SELECT department_id FROM employees GROUP BY department_
 ```
 - Explanation: The subquery (SELECT department_id FROM employees GROUP BY department_id HAVING COUNT(*) > 1) finds departments that have more than one employee. The main query retrieves the names of these departments.
 
+# Intermediate Level
+### 1. Aggregate function
+- COUNT, SUM, AVG, MIN, MAX are aggregate function
+```
+SELECT COUNT(employee_id) AS total_employees 
+FROM employees;
+```
+##### This(COUNT) query returns the total number of employees.
+```
+SELECT SUM(salary) AS total_salary
+FROM employees;
+```
+##### This(SUM) query returns the total salary of all employees.
+```
+SELECT AVG(salary) AS average_salary
+FROM employees;
+```
+##### This(AVG) query returns the average salary of all employees.
+```
+SELECT MIN(salary) AS lowest_salary
+FROM employees;
+```
+##### This(MIN) query returns the lowest salary among all employees.
+```
+SELECT MAX(salary) AS highest_salary
+FROM employees;
+```
+##### This(MAX) query returns the highest salary among all employees.
+
+### 2. Grouping Data Using GROUP BY
+The GROUP BY clause groups rows that have the same values in specified columns into summary rows, like "total sales per department" or "number of employees per department."
+```
+SELECT column1, aggregate_function(column2)
+FROM table_name
+GROUP BY column1;
+```
+##### Example: Group employees by department and calculate the total salary for each department.
+```
+SELECT department_id, SUM(salary) AS total_salary
+FROM employees
+GROUP BY department_id;
+```
+This query groups employees by department_id and calculates the total salary for each department.
+
+### Filtering Grouped Data Using HAVING
+The HAVING clause is used to filter groups based on a specified condition. It is similar to the WHERE clause but is applied after the data has been grouped.
+```
+SELECT column1, aggregate_function(column2)
+FROM table_name
+GROUP BY column1
+HAVING condition;
+```
+##### Example: Find departments with a total salary greater than 100,000.
+```
+SELECT department_id, SUM(salary) AS total_salary
+FROM employees
+GROUP BY department_id
+HAVING SUM(salary) > 100000;
+```
+This query first groups the data by department_id and calculates the total salary for each group. The HAVING clause then filters these groups to only include those where the total salary exceeds 100,000.
+
+
 
 
 

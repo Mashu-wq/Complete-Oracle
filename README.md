@@ -23,6 +23,46 @@
 - Practical Projects
 
 # Beginner Level
+## 1. Create A Table
+Let's create a simple table called employees with the following columns:
+
+  - employee_id: Number
+
+  - first_name: VARCHAR2(50)
+
+  - last_name: VARCHAR2(50)
+
+  - department: VARCHAR2(50)
+
+  - salary: Number
+
+```
+CREATE TABLE employees (
+    employee_id NUMBER PRIMARY KEY,
+    first_name VARCHAR2(50),
+    last_name VARCHAR2(50),
+    department VARCHAR2(50),
+    salary NUMBER
+);
+```
+## 2.Insert Data into the table
+Next, let's insert some sample data into the employees table:
+```
+INSERT INTO employees (employee_id, first_name, last_name, department, salary) 
+VALUES (1, 'John', 'Doe', 'Sales', 60000);
+
+INSERT INTO employees (employee_id, first_name, last_name, department, salary) 
+VALUES (2, 'Jane', 'Smith', 'HR', 50000);
+
+INSERT INTO employees (employee_id, first_name, last_name, department, salary) 
+VALUES (3, 'Mike', 'Johnson', 'IT', 75000);
+
+INSERT INTO employees (employee_id, first_name, last_name, department, salary) 
+VALUES (4, 'Emily', 'Davis', 'Sales', 62000);
+
+INSERT INTO employees (employee_id, first_name, last_name, department, salary) 
+VALUES (5, 'Michael', 'Brown', 'IT', 68000);
+```
 ## Basic Data Types and Functions
 ### 1. Common Data Types
 - VARCHAR2(A variable-length string data type used to store alphanumeric data);

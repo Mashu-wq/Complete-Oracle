@@ -377,6 +377,41 @@ HAVING SUM(salary) > 100000;
 ```
 This query first groups the data by department_id and calculates the total salary for each group. The HAVING clause then filters these groups to only include those where the total salary exceeds 100,000.
 
+## Complex Joins and Set Operations in SQL
+### 1. Understanding LEFT JOIN, RIGHT JOIN, and FULL OUTER JOIN
+Joins are used to combine rows from two or more tables based on a related column. While INNER JOIN only returns rows with matching values in both tables, complex joins like LEFT JOIN, RIGHT JOIN, and FULL OUTER JOIN allow you to include non-matching rows as well.
+
+- LEFT JOIN (or LEFT OUTER JOIN):
+   - Description: Returns all rows from the left table and the matched rows from the right table. If there is no match, NULL values are returned for columns from the right table.
+```
+SELECT columns
+FROM table1
+LEFT JOIN table2
+ON table1.column = table2.column;
+```
+##### Example:
+```
+SELECT employees.first_name, employees.last_name, departments.department_name
+FROM employees
+LEFT JOIN departments
+ON employees.department_id = departments.department_id;
+```
+- RIGHT JOIN (or RIGHT OUTER JOIN):
+   - Description: Returns all rows from the right table and the matched rows from the left table. If there is no match, NULL values are returned for columns from the left table.
+```
+SELECT employees.first_name, employees.last_name, departments.department_name
+FROM employees
+RIGHT JOIN departments
+ON employees.department_id = departments.department_id;
+```
+- FULL OUTER JOIN:
+   - Description: Returns all rows when there is a match in either the left or right table. If there is no match, NULL values are returned for columns from the non-matching table.
+```
+SELECT employees.first_name, employees.last_name, departments.department_name
+FROM employees
+FULL OUTER JOIN departments
+ON employees.department_id = departments.department_id;
+```
 
 
 

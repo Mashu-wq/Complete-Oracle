@@ -747,6 +747,58 @@ WHERE UNIQUE (SELECT salary FROM employees WHERE department_id = 101);
 - SOME (or ANY) is used to check if a condition is true for at least one value in a set.
 - ALL is used to check if a condition is true for all values in a set.
 - UNIQUE is used to ensure that all values in a result set are distinct, although it may not be supported in all SQL dialects.
+## Set Membership in SQL: AND, OR, and NOT
+Set membership operations in SQL involve using logical operators like AND, OR, and NOT to filter query results based on multiple conditions. These operators help define whether rows meet certain criteria or not.
+### 1. Using AND
+The AND operator is used to combine two or more conditions in a SQL query. Rows are included in the result set only if all the conditions are true.
+```
+SELECT columns
+FROM table_name
+WHERE condition1 AND condition2 AND ...;
+```
+- ##### Example: Retrieve employees who work in the Sales department and earn more than 50,000.
+```
+SELECT first_name, last_name, department_id, salary
+FROM employees
+WHERE department_id = (SELECT department_id FROM departments WHERE department_name = 'Sales')
+  AND salary > 50000;
+```
+### 2. Using OR
+The OR operator is used to combine two or more conditions. Rows are included in the result set if at least one of the conditions is true.
+```
+SELECT columns
+FROM table_name
+WHERE condition1 OR condition2 OR ...;
+```
+##### Example: Retrieve employees who work in the Sales department or earn more than 70,000.
+```
+SELECT first_name, last_name, department_id, salary
+FROM employees
+WHERE department_id = (SELECT department_id FROM departments WHERE department_name = 'Sales')
+  OR salary > 70000;
+```
+### 3. Using NOT
+The NOT operator is used to negate a condition. Rows are included in the result set if the specified condition is false.
+```
+SELECT columns
+FROM table_name
+WHERE NOT condition;
+```
+##### Example: Retrieve employees who do not work in the Sales department.
+```
+SELECT first_name, last_name, department_id, salary
+FROM employees
+WHERE NOT department_id = (SELECT department_id FROM departments WHERE department_name = 'Sales');
+```
+### Combining AND, OR, and NOT
+- ##### Example: Retrieve employees who work in the Sales department or in any department but earn less than 50,000.
+```
+SELECT first_name, last_name, department_id, salary
+FROM employees
+WHERE (department_id = (SELECT department_id FROM departments WHERE department_name = 'Sales')
+  OR salary < 50000)
+  AND NOT department_id = (SELECT department_id FROM departments WHERE department_name = 'HR');
+```
 ## Wildcards in SQL
 In SQL, wildcards are special characters used with the LIKE operator to search for patterns within text data. The two most common wildcards are % and _.
 ### 1. Percent (%) Wildcard

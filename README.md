@@ -412,6 +412,201 @@ FROM employees
 FULL OUTER JOIN departments
 ON employees.department_id = departments.department_id;
 ```
+### 2. Using UNION, INTERSECT, and MINUS to Combine Multiple Result Sets
+Set operations allow you to combine the results of two or more SELECT queries. The key set operations are UNION, INTERSECT, and MINUS.
+- UNION:
+  - Description: Combines the results of two or more SELECT queries, eliminating duplicate rows. The result set includes all rows from both queries.
+```
+SELECT columns FROM table1
+UNION
+SELECT columns FROM table2;
+```
+```
+SELECT first_name, last_name FROM employees
+UNION
+SELECT first_name, last_name FROM customers;
+```
+- INTERSECT:
+   - Description: Returns only the rows that are common to both SELECT queries.
+```
+SELECT columns FROM table1
+INTERSECT
+SELECT columns FROM table2;
+```
+```
+SELECT first_name, last_name FROM employees
+INTERSECT
+SELECT first_name, last_name FROM customers;
+```
+- MINUS:
+   - Description: Returns the rows from the first SELECT query that are not in the result of the second SELECT query.
+```
+SELECT columns FROM table1
+MINUS
+SELECT columns FROM table2;
+```
+```
+SELECT first_name, last_name FROM employees
+MINUS
+SELECT first_name, last_name FROM customers;
+```
+## Advanced Subqueries in SQL
+### 1. Correlated Subqueries
+A correlated subquery is a subquery that references columns from the outer query. Unlike a regular subquery, a correlated subquery is executed once for each row processed by the outer query. This type of subquery is useful when the subquery needs to be evaluated for each row in the outer query.
+```
+SELECT column1, column2
+FROM table1 AS t1
+WHERE columnX = (SELECT aggregate_function(columnY)
+                FROM table2 AS t2
+                WHERE t2.columnZ = t1.columnZ);
+```
+##### Example: Find all employees whose salary is above the average salary of their department.
+```
+SELECT first_name, last_name, salary
+FROM employees e
+WHERE salary > (SELECT AVG(salary)
+                FROM employees
+                WHERE department_id = e.department_id);
+```
+- Explanation: The subquery calculates the average salary for the department of each employee. The outer query then selects only those employees whose salary is greater than this department average.
+### 2. Using Subqueries in SELECT and FROM Clauses
+Subqueries can also be used within the SELECT and FROM clauses to perform complex operations.
+- #### Subquery in the SELECT Clause:
+##### Example: Display the name of each employee along with the total salary of their department.
+```
+SELECT first_name, last_name, 
+       (SELECT SUM(salary)
+        FROM employees
+        WHERE department_id = e.department_id) AS department_total_salary
+FROM employees e;
+```
+ - Explanation: The subquery calculates the total salary for the department of each employee and displays it alongside the employee's name.
+- #### Subquery in the FROM Clause:
+##### Example: Find the average salary of all departments and display it alongside the department name.
+```
+SELECT d.department_name, avg_dept_salary
+FROM departments d
+JOIN (SELECT department_id, AVG(salary) AS avg_dept_salary
+      FROM employees
+      GROUP BY department_id) e_avg
+ON d.department_id = e_avg.department_id;
+```
+- The subquery in the FROM clause calculates the average salary for each department. The main query then joins this result with the departments table to display the department names alongside their average salaries.
+### 3. EXISTS and NOT EXISTS in Subqueries
+The EXISTS and NOT EXISTS operators are used to test for the existence of rows returned by a subquery. These operators are typically used in the WHERE clause.
+- #### EXISTS:
+  - Description: Returns TRUE if the subquery returns one or more rows. It is often used to check if a certain condition is met.
+```
+SELECT columns
+FROM table1
+WHERE EXISTS (SELECT 1
+              FROM table2
+              WHERE condition);
+```
+##### Example: Find all departments that have at least one employee.
+```
+SELECT department_name
+FROM departments d
+WHERE EXISTS (SELECT 1
+              FROM employees e
+              WHERE e.department_id = d.department_id);
+```
+ - Explanation: The subquery checks whether there is at least one employee in each department. The outer query returns the department names where this condition is true.
+- #### NOT EXISTS:
+  - Description: Returns TRUE if the subquery returns no rows. It is often used to find records that do not have a corresponding entry in another table.
+```
+SELECT columns
+FROM table1
+WHERE NOT EXISTS (SELECT 1
+                  FROM table2
+                  WHERE condition);
+```
+##### Example: Find all departments that do not have any employees.
+```
+SELECT department_name
+FROM departments d
+WHERE NOT EXISTS (SELECT 1
+                  FROM employees e
+                  WHERE e.department_id = d.department_id);
+```
+ - Explanation: The subquery checks whether there are no employees in each department. The outer query returns the department names where this condition is true.
+## Data Definition Language (DDL) in SQL
+DDL (Data Definition Language) statements are used to define and manage database structures such as tables, indexes, and constraints. The most common DDL commands are CREATE, ALTER, and DROP.
+### 1. Creating Tables Using CREATE TABLE
+```
+CREATE TABLE table_name (
+    column1 datatype constraint,
+    column2 datatype constraint,
+    ...
+);
+```
+##### Example: Create a table named employees with columns for employee_id, first_name, last_name, department_id, and salary.
+```
+CREATE TABLE employees (
+    employee_id NUMBER PRIMARY KEY,
+    first_name VARCHAR2(50) NOT NULL,
+    last_name VARCHAR2(50) NOT NULL,
+    department_id NUMBER,
+    salary NUMBER
+);
+```
+### 2. Modifying Table Structures Using ALTER TABLE
+The ALTER TABLE statement is used to modify an existing table's structure. You can add, modify, or drop columns and constraints.
+```
+ALTER TABLE table_name
+ADD column_name datatype constraint;
+
+ALTER TABLE table_name
+MODIFY column_name datatype constraint;
+
+ALTER TABLE table_name
+DROP COLUMN column_name;
+```
+##### Examples: 
+- Adding a New Column: Add a hire_date column to the employees table.
+```
+ALTER TABLE employees
+ADD hire_date DATE;
+```
+- Modifying an Existing Column: Change the data type of the salary column to allow for larger numbers.
+```
+ALTER TABLE employees
+MODIFY salary NUMBER(10, 2);
+```
+- Dropping a Column: Remove the department_id column from the employees table.
+```
+ALTER TABLE employees
+DROP COLUMN department_id;
+```
+### 3. Dropping Tables and Other Database Objects Using DROP
+The DROP statement is used to delete entire tables or other database objects such as views, indexes, or databases. Once a table is dropped, all the data in the table is lost permanently.
+```
+DROP TABLE table_name;
+
+DROP VIEW view_name;
+
+DROP INDEX index_name;
+```
+##### Example:
+- Dropping a Table: Delete the employees table from the database.
+```
+DROP TABLE employees;
+```
+- Dropping a View: Remove a view named employee_view.
+```
+DROP VIEW employee_view;
+```
+- Dropping an Index: Delete an index named emp_salary_idx.
+```
+DROP INDEX emp_salary_idx;
+```
+## Data Manipulation Language (DML) in SQL
+Data Manipulation Language (DML) consists of SQL commands that are used to manage and manipulate data within existing database tables. The most common DML commands are INSERT, UPDATE, DELETE, and SELECT.
+
+
+
+
+  
 
 
 

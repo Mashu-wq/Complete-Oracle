@@ -811,6 +811,113 @@ WHERE first_name LIKE 'J_n%';
 ```
 - Explanation: This query returns all first_name values that start with 'J', have 'n' as the third character, and can have any number of characters after that.
 
+# Advance Level
+## Cascading Actions in Referential Integrity
+Cascading actions are mechanisms used in relational databases to maintain referential integrity between tables when performing operations such as DELETE or UPDATE. These actions define what should happen to related rows in a child table when a row in the parent table is updated or deleted.
+### Referential Integrity
+Referential integrity ensures that relationships between tables remain consistent. Specifically, it ensures that a foreign key in a child table always references a valid row in the parent table.
+- Parent Table: The table that is referenced by a foreign key.
+- Child Table: The table that contains the foreign key referencing the parent table.
+## Cascading Actions
+When defining foreign keys, you can specify cascading actions that dictate what happens when the parent key is updated or deleted. The most common cascading actions are CASCADE, SET NULL, SET DEFAULT, and NO ACTION (or RESTRICT).
+### 1. ON DELETE CASCADE
+- Purpose: Automatically deletes the corresponding rows in the child table when a row in the parent table is deleted.
+  - Example:
+```
+CREATE TABLE departments (
+    department_id NUMBER PRIMARY KEY,
+    department_name VARCHAR2(50)
+);
+
+CREATE TABLE employees (
+    employee_id NUMBER PRIMARY KEY,
+    first_name VARCHAR2(50),
+    last_name VARCHAR2(50),
+    department_id NUMBER,
+    FOREIGN KEY (department_id) REFERENCES departments(department_id) ON DELETE CASCADE
+);
+```
+- Explanation: In this example, if a row in the departments table is deleted, all rows in the employees table that reference that department_id will also be deleted.
+### 2. ON UPDATE CASCADE
+- Purpose: Automatically updates the corresponding foreign key values in the child table when the primary key value in the parent table is updated.
+  - Example:
+```
+CREATE TABLE departments (
+    department_id NUMBER PRIMARY KEY,
+    department_name VARCHAR2(50)
+);
+
+CREATE TABLE employees (
+    employee_id NUMBER PRIMARY KEY,
+    first_name VARCHAR2(50),
+    last_name VARCHAR2(50),
+    department_id NUMBER,
+    FOREIGN KEY (department_id) REFERENCES departments(department_id) ON UPDATE CASCADE
+);
+```
+- Explanation: If the department_id in the departments table is updated, the corresponding department_id values in the employees table will also be updated.
+### 3. ON DELETE SET NULL
+- Purpose: Sets the foreign key column to NULL in the child table when the corresponding row in the parent table is deleted.
+  - Example:
+```
+CREATE TABLE employees (
+    employee_id NUMBER PRIMARY KEY,
+    first_name VARCHAR2(50),
+    last_name VARCHAR2(50),
+    department_id NUMBER,
+    FOREIGN KEY (department_id) REFERENCES departments(department_id) ON DELETE SET NULL
+);
+```
+- Explanation: If a row in the departments table is deleted, the department_id in the employees table is set to NULL for all related employees.
+### 4. ON UPDATE SET NULL
+- Purpose: Sets the foreign key column to NULL in the child table when the corresponding primary key in the parent table is updated.
+```
+CREATE TABLE employees (
+    employee_id NUMBER PRIMARY KEY,
+    first_name VARCHAR2(50),
+    last_name VARCHAR2(50),
+    department_id NUMBER,
+    FOREIGN KEY (department_id) REFERENCES departments(department_id) ON UPDATE SET NULL
+);
+```
+- Explanation: If the department_id in the departments table is updated, the corresponding department_id in the employees table is set to NULL.
+### 5. ON DELETE SET DEFAULT
+- Purpose: Sets the foreign key column to its default value when the corresponding row in the parent table is deleted.
+```
+CREATE TABLE employees (
+    employee_id NUMBER PRIMARY KEY,
+    first_name VARCHAR2(50),
+    last_name VARCHAR2(50),
+    department_id NUMBER DEFAULT 0,
+    FOREIGN KEY (department_id) REFERENCES departments(department_id) ON DELETE SET DEFAULT
+);
+```
+- Explanation: If a department is deleted from the departments table, the department_id in the employees table is set to 0 (or another default value).
+### 6. ON UPDATE SET DEFAULT
+- Purpose: Sets the foreign key column to its default value when the corresponding primary key in the parent table is updated.
+```
+CREATE TABLE employees (
+    employee_id NUMBER PRIMARY KEY,
+    first_name VARCHAR2(50),
+    last_name VARCHAR2(50),
+    department_id NUMBER DEFAULT 0,
+    FOREIGN KEY (department_id) REFERENCES departments(department_id) ON UPDATE SET DEFAULT
+);
+```
+- Explanation: If the department_id in the departments table is updated, the corresponding department_id in the employees table is set to its default value.
+### 7. ON DELETE NO ACTION or RESTRICT
+- Purpose: Prevents the deletion of a row in the parent table if there are related rows in the child table. This is the default behavior if no cascading action is specified.
+```
+CREATE TABLE employees (
+    employee_id NUMBER PRIMARY KEY,
+    first_name VARCHAR2(50),
+    last_name VARCHAR2(50),
+    department_id NUMBER,
+    FOREIGN KEY (department_id) REFERENCES departments(department_id) ON DELETE NO ACTION
+);
+```
+- Explanation: If you attempt to delete a department that is referenced by any employees, the deletion will fail.
+
 
 
 

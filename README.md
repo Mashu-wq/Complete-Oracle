@@ -969,6 +969,121 @@ CREATE TABLE employees (
 );
 ```
 - Explanation: If you attempt to delete a department that is referenced by any employees, the deletion will fail.
+## PL/SQL Programming in Oracle
+### 1. Introduction to PL/SQL
+PL/SQL (Procedural Language/Structured Query Language) is Oracle's procedural extension to SQL. It allows you to write complex and powerful code that can perform operations like loops, conditions, and exceptions, enabling more control over your SQL operations.
+- Key Features:
+  - Procedural Constructs: Includes variables, conditions (IF...THEN), loops (FOR, WHILE), and exception handling (EXCEPTION).
+  - Tight Integration with SQL: Combines SQL statements with procedural logic in a seamless manner.
+  - Modularity: Supports the creation of reusable code units like procedures, functions, and packages.
+  - Error Handling: Provides robust error handling through exceptions
+### 2. Writing and Executing PL/SQL Blocks
+A PL/SQL block is the fundamental unit of PL/SQL programming. It is a code structure that can contain SQL statements, procedural statements, and control structures.
+- Structure of a PL/SQL Block:
+```
+DECLARE
+  -- Declarations of variables, constants, and types
+  variable_name datatype := initial_value;
+BEGIN
+  -- Executable statements (SQL and PL/SQL commands)
+  DBMS_OUTPUT.PUT_LINE('Hello, PL/SQL!');
+EXCEPTION
+  -- Exception handling code
+  WHEN others THEN
+    DBMS_OUTPUT.PUT_LINE('An error occurred.');
+END;
+```
+- Components:
+  - DECLARE: Optional section where variables, constants, and types are declared.
+  - BEGIN: Mandatory section where the executable code (SQL and PL/SQL statements) is written.
+  - EXCEPTION: Optional section for handling runtime errors.
+  - END: Marks the end of the PL/SQL block.
+  - Example:
+```
+DECLARE
+  v_employee_name VARCHAR2(50);
+BEGIN
+  SELECT first_name INTO v_employee_name
+  FROM employees
+  WHERE employee_id = 1;
+  
+  DBMS_OUTPUT.PUT_LINE('Employee Name: ' || v_employee_name);
+EXCEPTION
+  WHEN NO_DATA_FOUND THEN
+    DBMS_OUTPUT.PUT_LINE('No employee found with that ID.');
+END;
+```
+- Explanation: This block retrieves the first_name of an employee with employee_id = 1 and prints it. If no employee is found, it handles the NO_DATA_FOUND exception.
+- Executing PL/SQL Blocks:
+  - In SQL*Plus or SQL Developer, you can execute a PL/SQL block directly by typing or pasting it into the editor and running it.
+### 3. Creating and Using Stored Procedures, Functions, and Triggers
+PL/SQL allows you to create reusable units of code that can be called multiple times from different parts of your application.
+- #### Stored Procedures:
+  - Purpose: A stored procedure is a named PL/SQL block that can take input parameters, perform an action, and optionally return a result through output parameters.
+```
+CREATE OR REPLACE PROCEDURE procedure_name (parameter_name IN datatype, parameter_name OUT datatype)
+IS
+BEGIN
+  -- PL/SQL statements
+END procedure_name;
+```
+```
+CREATE OR REPLACE PROCEDURE raise_salary(p_emp_id IN NUMBER, p_increase IN NUMBER)
+IS
+BEGIN
+  UPDATE employees
+  SET salary = salary + p_increase
+  WHERE employee_id = p_emp_id;
+  
+  COMMIT;
+END raise_salary;
+```
+- Explanation: This procedure increases the salary of an employee by a specified amount.
+- #### Functions:
+  - Purpose: A function is similar to a stored procedure, but it must return a value.
+```
+CREATE OR REPLACE FUNCTION function_name (parameter_name IN datatype) RETURN datatype
+IS
+BEGIN
+  -- PL/SQL statements
+  RETURN some_value;
+END function_name;
+```
+```
+CREATE OR REPLACE FUNCTION get_employee_salary(p_emp_id IN NUMBER) RETURN NUMBER
+IS
+  v_salary NUMBER;
+BEGIN
+  SELECT salary INTO v_salary
+  FROM employees
+  WHERE employee_id = p_emp_id;
+  
+  RETURN v_salary;
+END get_employee_salary;
+```
+- Explanation: This function returns the salary of a specified employee.
+- #### Triggers:
+  - Purpose: A trigger is a special type of stored procedure that automatically executes (or "fires") in response to specific events on a table, such as INSERT, UPDATE, or DELETE.
+```
+CREATE OR REPLACE TRIGGER trigger_name
+BEFORE INSERT OR UPDATE OR DELETE ON table_name
+FOR EACH ROW
+BEGIN
+  -- PL/SQL statements
+END trigger_name;
+```
+```
+CREATE OR REPLACE TRIGGER before_employee_update
+BEFORE UPDATE ON employees
+FOR EACH ROW
+BEGIN
+  IF :NEW.salary < :OLD.salary THEN
+    RAISE_APPLICATION_ERROR(-20001, 'Salary cannot be decreased.');
+  END IF;
+END before_employee_update;
+```
+- Explanation: This trigger prevents an employee's salary from being decreased during an update operation. If the new salary is less than the old salary, an error is raised.
+  
 
 
 
